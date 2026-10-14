@@ -1,0 +1,1923 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пульс розницы | KPI директора</title>
+    <style>
+        /* --- Dark Theme Palette & CSS Variables --- */
+        :root {
+            --bg-main: #0b1329;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
+            --bg-input: #1e293b;
+            --border-color: #334155;
+            --border-highlight: #0d9488;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-teal: #0d9488;
+            --accent-teal-light: #14b8a6;
+            --accent-blue: #2563eb;
+            --accent-blue-light: #3b82f6;
+            
+            --status-success: #10b981;
+            --status-warning: #f59e0b;
+            --status-danger: #ef4444;
+            --status-info: #06b6d4;
+            
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Base & Reset Rules --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            font-size: 14px;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-teal);
+        }
+
+        /* --- Top Banner & Header --- */
+        .demo-banner {
+            background: linear-gradient(90deg, #b45309, #d97706);
+            color: #ffffff;
+            text-align: center;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header {
+            background: rgba(11, 19, 41, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: var(--glass-border);
+            padding: 16px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.4);
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--accent-teal-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .mode-toggle-group {
+            background: var(--bg-input);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            border: var(--glass-border);
+            display: flex;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mode-btn.active {
+            background: var(--accent-teal);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+        }
+
+        /* --- Filter Toolbar --- */
+        .filter-bar {
+            background: rgba(15, 23, 42, 0.6);
+            border-bottom: var(--glass-border);
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        select, input, button {
+            outline: none;
+            font-size: 13px;
+        }
+
+        .custom-select, .custom-input {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .custom-select:focus, .custom-input:focus {
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+
+        .btn {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: #2d3748;
+            border-color: var(--text-secondary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), #0f766e);
+            border: none;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-teal-light), var(--accent-teal));
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* --- Main Layout Tabs --- */
+        .navigation-tabs {
+            background: rgba(11, 19, 41, 0.8);
+            padding: 0 28px;
+            display: flex;
+            gap: 2px;
+            border-bottom: var(--glass-border);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 14px 18px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            color: var(--accent-teal-light);
+            border-bottom-color: var(--accent-teal-light);
+            background: rgba(13, 148, 136, 0.05);
+        }
+
+        /* --- Content Views Container --- */
+        main {
+            padding: 24px 28px;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI Components: Cards & Grids --- */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .kpi-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .badge-info { background: rgba(6, 182, 212, 0.2); color: #38bdf8; }
+
+        .kpi-value-container {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .kpi-target {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.08);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .kpi-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* --- Dashboard Grid Details Layout --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Data Tables --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: var(--glass-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: rgba(30, 41, 59, 0.8);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: var(--glass-border);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            color: var(--text-primary);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* --- Forms & Entry Sections --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* --- SVG Chart Container --- */
+        .chart-container {
+            width: 100%;
+            height: 260px;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--accent-teal);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* --- Diagnostic & Task Cards --- */
+        .diag-card {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-teal);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .diag-card.warning { border-left-color: var(--status-warning); }
+        .diag-card.danger { border-left-color: var(--status-danger); }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            background: var(--bg-input);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: var(--glass-border);
+        }
+
+        /* --- Modal Popup --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-main);
+            border: var(--glass-border);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* --- Print Styles --- */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+            }
+            header, .filter-bar, .navigation-tabs, .mode-banner, .btn, .no-print {
+                display: none !important;
+            }
+            .card, .tab-content {
+                background: none !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                color: #000 !important;
+                display: block !important;
+            }
+            .tab-content:not(.active) {
+                display: none !important;
+            }
+            th {
+                background: #eee !important;
+                color: #000 !important;
+            }
+            td {
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Demo Banner -->
+    <div id="demoBanner" class="demo-banner">
+        <span>⚡ ДЕМОНСТРАЦИОННЫЙ РЕЖИМ: Загружены тестовые показатели сети. Внесённые изменения не сохраняются в рабочую базу.</span>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-title">
+            <div class="brand-logo">ПР</div>
+            <div class="brand-text">
+                <h1>Пульс розницы</h1>
+                <p>Панель управления KPI директора сетевого общепита</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="mode-toggle-group">
+                <button class="mode-btn active" id="btnModeDemo" onclick="setOperatingMode('demo')">Демо-режим</button>
+                <button class="mode-btn" id="btnModeWork" onclick="setOperatingMode('work')">Рабочий режим</button>
+            </div>
+            <button class="btn btn-primary" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Отчёт
+            </button>
+        </div>
+    </header>
+
+    <!-- Global Filters Bar -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">Период:</span>
+            <select id="filterMonth" class="custom-select" onchange="applyFilters()">
+                <option value="1">Январь</option>
+                <option value="2">Февраль</option>
+                <option value="3">Март</option>
+                <option value="4">Апрель</option>
+                <option value="5">Май</option>
+                <option value="6">Июнь</option>
+                <option value="7">Июль</option>
+                <option value="8">Август</option>
+                <option value="9">Сентябрь</option>
+                <option value="10" selected>Октябрь</option>
+                <option value="11">Ноябрь</option>
+                <option value="12">Декабрь</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Формат:</span>
+            <select id="filterFormat" class="custom-select" onchange="applyFilters()">
+                <option value="ALL">Все форматы</option>
+                <option value="PIE">Пироговые</option>
+                <option value="CANTEEN">Столовые</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Объект:</span>
+            <select id="filterLocation" class="custom-select" onchange="applyFilters()">
+                <option value="ALL">Все объекты</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="navigation-tabs">
+        <div class="nav-tab active" onclick="switchTab('dashboard')">Главная панель</div>
+        <div class="nav-tab" onclick="switchTab('dataInput')">Ввод данных</div>
+        <div class="nav-tab" onclick="switchTab('analytics')">Финансовая аналитика</div>
+        <div class="nav-tab" onclick="switchTab('ranking')">Рейтинг объектов</div>
+        <div class="nav-tab" onclick="switchTab('diagnostics')">Диагностика причин</div>
+        <div class="nav-tab" onclick="switchTab('standards')">Стандарты и сервис</div>
+        <div class="nav-tab" onclick="switchTab('wholesale')">Оптовое направление</div>
+        <div class="nav-tab" onclick="switchTab('bonusCalc')">Калькулятор премии</div>
+        <div class="nav-tab" onclick="switchTab('tasks')">Управленческие задачи</div>
+        <div class="nav-tab" onclick="switchTab('dataMgmt')">Данные & Экспорт</div>
+    </div>
+
+    <!-- Main Container -->
+    <main>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content active">
+            <!-- Top 5 KPIs -->
+            <div class="kpi-grid">
+                <!-- KPI 1 -->
+                <div class="card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">1. Прибыль розницы</span>
+                        <span id="kpi1-badge" class="badge badge-success">В норме</span>
+                    </div>
+                    <div class="kpi-value-container">
+                        <span id="kpi1-fact" class="kpi-value">0 ₽</span>
+                        <span id="kpi1-target" class="kpi-target">из 0 ₽</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="kpi1-progress" class="progress-bar-fill" style="width: 0%; background: var(--accent-teal);"></div>
+                    </div>
+                    <div class="kpi-footer">
+                        <span>Выполнение: <strong id="kpi1-percent">0%</strong></span>
+                        <span id="kpi1-var">0 ₽</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">2. Выручка розницы</span>
+                        <span id="kpi2-badge" class="badge badge-success">В норме</span>
+                    </div>
+                    <div class="kpi-value-container">
+                        <span id="kpi2-fact" class="kpi-value">0 ₽</span>
+                        <span id="kpi2-target" class="kpi-target">из 0 ₽</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="kpi2-progress" class="progress-bar-fill" style="width: 0%; background: var(--accent-blue);"></div>
+                    </div>
+                    <div class="kpi-footer">
+                        <span>Выполнение: <strong id="kpi2-percent">0%</strong></span>
+                        <span id="kpi2-var">0 ₽</span>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">3. Результативность объектов</span>
+                        <span id="kpi3-badge" class="badge badge-info">Анализ</span>
+                    </div>
+                    <div class="kpi-value-container">
+                        <span id="kpi3-fact" class="kpi-value">0 / 0</span>
+                        <span class="kpi-target">объектов</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="kpi3-progress" class="progress-bar-fill" style="width: 0%; background: var(--status-info);"></div>
+                    </div>
+                    <div class="kpi-footer">
+                        <span>Доля успешных: <strong id="kpi3-percent">0%</strong></span>
+                        <span>Порог: Выручка+Прибыль</span>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">4. Качество и Сервис</span>
+                        <span id="kpi4-badge" class="badge badge-success">Высокий</span>
+                    </div>
+                    <div class="kpi-value-container">
+                        <span id="kpi4-fact" class="kpi-value">0%</span>
+                        <span id="kpi4-target" class="kpi-target">цель 90%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="kpi4-progress" class="progress-bar-fill" style="width: 0%; background: var(--status-success);"></div>
+                    </div>
+                    <div class="kpi-footer">
+                        <span>Retailiqa / Тайный пок.</span>
+                        <span id="kpi4-sub">Средний балл</span>
+                    </div>
+                </div>
+
+                <!-- KPI 5 -->
+                <div class="card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">5. Оптовое направление</span>
+                        <span id="kpi5-badge" class="badge badge-warning">Рост</span>
+                    </div>
+                    <div class="kpi-value-container">
+                        <span id="kpi5-fact" class="kpi-value">0 ₽</span>
+                        <span id="kpi5-target" class="kpi-target">из 0 ₽</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="kpi5-progress" class="progress-bar-fill" style="width: 0%; background: var(--status-warning);"></div>
+                    </div>
+                    <div class="kpi-footer">
+                        <span>Выполнение: <strong id="kpi5-percent">0%</strong></span>
+                        <span id="kpi5-clients">0 нов. клиентов</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Summary Grid -->
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Динамика выручки и прибыли (План vs Факт)</h3>
+                    <div class="chart-container" id="dashChartContainer">
+                        <svg id="dashChart" viewBox="0 0 600 220"></svg>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Экспресс-статус сети</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;" id="dashSummaryList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: DATA INPUT -->
+        <div id="tab-dataInput" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                    <h3>Управление объектами розницы</h3>
+                    <button class="btn btn-primary" onclick="openLocationModal()">+ Добавить объект</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Название объекта</th>
+                                <th>Формат</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="locationListTable">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 16px;">Ввод помесячных фактических и плановых данных</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Выберите объект:</label>
+                        <select id="inputLocSelect" class="custom-select" onchange="loadMonthlyInputForm()"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Месяц ввода:</label>
+                        <select id="inputMonthSelect" class="custom-select" onchange="loadMonthlyInputForm()">
+                            <option value="1">Январь</option><option value="2">Февраль</option><option value="3">Март</option>
+                            <option value="4">Апрель</option><option value="5">Май</option><option value="6">Июнь</option>
+                            <option value="7">Июль</option><option value="8">Август</option><option value="9">Сентябрь</option>
+                            <option value="10" selected>Октябрь</option><option value="11">Ноябрь</option><option value="12">Декабрь</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr style="border-color: var(--border-color); margin: 20px 0;">
+
+                <form id="monthlyDataForm" onsubmit="saveMonthlyData(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>План Выручки (₽):</label>
+                            <input type="number" id="inpRevPlan" class="custom-input" min="0" step="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Факт Выручки (₽):</label>
+                            <input type="number" id="inpRevFact" class="custom-input" min="0" step="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>План Прибыли (₽):</label>
+                            <input type="number" id="inpProfPlan" class="custom-input" step="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Факт Прибыли (₽):</label>
+                            <input type="number" id="inpProfFact" class="custom-input" step="1000">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Норматив ФОТ (%):</label>
+                            <input type="number" id="inpFotPlan" class="custom-input" min="0" max="100" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Фактический ФОТ (суммарно ₽):</label>
+                            <input type="number" id="inpFotFact" class="custom-input" min="0" step="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Количество чеков (шт):</label>
+                            <input type="number" id="inpChecks" class="custom-input" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Списания (₽):</label>
+                            <input type="number" id="inpWriteoffs" class="custom-input" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Маржинальность (%):</label>
+                            <input type="number" id="inpMargin" class="custom-input" min="0" max="100" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Балл Retailiqa / Сервис (%):</label>
+                            <input type="number" id="inpAuditScore" class="custom-input" min="0" max="100" step="1">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 12px;">
+                        <button type="submit" class="btn btn-primary">Сохранить показатели</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 3: FINANCIAL ANALYTICS -->
+        <div id="tab-analytics" class="tab-content">
+            <div class="kpi-grid">
+                <div class="card">
+                    <span class="kpi-title">Пироговые (Выручка)</span>
+                    <div id="finPiesRev" class="kpi-value" style="font-size: 22px; margin-top:8px;">0 ₽</div>
+                    <div id="finPiesRevVar" class="kpi-footer" style="margin-top: 6px;">План: 0 ₽</div>
+                </div>
+                <div class="card">
+                    <span class="kpi-title">Столовые (Выручка)</span>
+                    <div id="finCanteensRev" class="kpi-value" style="font-size: 22px; margin-top:8px;">0 ₽</div>
+                    <div id="finCanteensRevVar" class="kpi-footer" style="margin-top: 6px;">План: 0 ₽</div>
+                </div>
+                <div class="card">
+                    <span class="kpi-title">Итого Розница (Прибыль)</span>
+                    <div id="finTotalProf" class="kpi-value" style="font-size: 22px; margin-top:8px;">0 ₽</div>
+                    <div id="finTotalProfVar" class="kpi-footer" style="margin-top: 6px;">Маржа: 0%</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 24px;">
+                <h3>Сравнительный анализ по форматам</h3>
+                <div class="chart-container" style="height: 280px; margin-top: 16px;">
+                    <svg id="finComparisonChart" viewBox="0 0 600 240"></svg>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Сводная финансовая таблица по категориям</h3>
+                <div class="table-responsive" style="margin-top: 16px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Направление</th>
+                                <th>Выручка План</th>
+                                <th>Выручка Факт</th>
+                                <th>Отклонение (₽)</th>
+                                <th>Прибыль План</th>
+                                <th>Прибыль Факт</th>
+                                <th>Отклонение (₽)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="finSummaryTable">
+                            <!-- Populated JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: RANKING -->
+        <div id="tab-ranking" class="tab-content">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                    <h3>Рейтинг эффективности точек</h3>
+                    <div style="font-size: 12px; color: var(--text-secondary);">
+                        Критерий успешности: Выполнение плана по Выручке &ge; 95% И Прибыли &ge; 95%
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th onclick="sortRankingTable('name')">Объект ⇳</th>
+                                <th onclick="sortRankingTable('format')">Формат ⇳</th>
+                                <th onclick="sortRankingTable('revPercent')">Выручка % ⇳</th>
+                                <th onclick="sortRankingTable('profPercent')">Прибыль % ⇳</th>
+                                <th onclick="sortRankingTable('avgCheck')">Ср. чек ⇳</th>
+                                <th onclick="sortRankingTable('fotPercent')">ФОТ % ⇳</th>
+                                <th onclick="sortRankingTable('status')">Результативность ⇳</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingTableBody">
+                            <!-- Populated JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: DIAGNOSTICS -->
+        <div id="tab-diagnostics" class="tab-content">
+            <div style="margin-bottom: 20px;">
+                <h3>Факторный анализ и диагностика проблемных зон</h3>
+                <p style="font-size: 12px; color: var(--text-secondary);">Автоматический поиск отклонений показателей от нормативов и целевых ориентиров.</p>
+            </div>
+
+            <div id="diagnosticsContainer">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- TAB 6: STANDARDS & SERVICE -->
+        <div id="tab-standards" class="tab-content">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Результаты проверок качества и сервиса</h3>
+                    <div style="margin-top: 16px;" class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Объект</th>
+                                    <th>Балл Retailiqa</th>
+                                    <th>Оценка</th>
+                                </tr>
+                            </thead>
+                            <tbody id="standardsTableBody">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Настройка порогов стандартов</h3>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Целевой балл сервиса (%):</label>
+                        <input type="number" id="cfgServiceTarget" class="custom-input" value="90" onchange="saveConfig()">
+                    </div>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Критическая граница (%):</label>
+                        <input type="number" id="cfgServiceCritical" class="custom-input" value="75" onchange="saveConfig()">
+                    </div>
+                    <div style="margin-top: 16px; font-size: 12px; color: var(--text-secondary);">
+                        Проверки включают оценку соблюдения технологических карт, санитарных норм и стандарт работы кассиров/раздачи.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: WHOLESALE -->
+        <div id="tab-wholesale" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Развитие Оптового Направления и Цехов B2B</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                    Учёт поставок сторонним клиентам, замороженной продукции и корпоративного питания. Учитывается отдельно от розницы.
+                </p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>План Выручки Опт (₽):</label>
+                        <input type="number" id="wsRevPlan" class="custom-input" value="2500000">
+                    </div>
+                    <div class="form-group">
+                        <label>Факт Выручки Опт (₽):</label>
+                        <input type="number" id="wsRevFact" class="custom-input" value="2380000">
+                    </div>
+                    <div class="form-group">
+                        <label>Прибыль Опт (₽):</label>
+                        <input type="number" id="wsProfFact" class="custom-input" value="620000">
+                    </div>
+                    <div class="form-group">
+                        <label>Новые контракты (шт):</label>
+                        <input type="number" id="wsNewClients" class="custom-input" value="4">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveWholesaleData()">Обновить оптовые данные</button>
+            </div>
+        </div>
+
+        <!-- TAB 8: BONUS CALCULATOR -->
+        <div id="tab-bonusCalc" class="tab-content">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Настройка весов и правил расчета KPI</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                        <div class="form-group">
+                            <label>Базовый оклад / премия (₽):</label>
+                            <input type="number" id="bonusBase" class="custom-input" value="100000" onchange="calculateBonus()">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес KPI 1 (Прибыль розницы, %):</label>
+                            <input type="number" id="w1" class="custom-input" value="30" onchange="calculateBonus()">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес KPI 2 (Выручка розницы, %):</label>
+                            <input type="number" id="w2" class="custom-input" value="25" onchange="calculateBonus()">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес KPI 3 (Результативность объектов, %):</label>
+                            <input type="number" id="w3" class="custom-input" value="20" onchange="calculateBonus()">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес KPI 4 (Стандарты и Сервис, %):</label>
+                            <input type="number" id="w4" class="custom-input" value="15" onchange="calculateBonus()">
+                        </div>
+                        <div class="form-group">
+                            <label>Вес KPI 5 (Оптовое направление, %):</label>
+                            <input type="number" id="w5" class="custom-input" value="10" onchange="calculateBonus()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Расчёт премии директора розницы</h3>
+                    <div id="bonusCalcResult" style="margin-top: 16px;">
+                        <!-- Calculated JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 9: TASKS -->
+        <div id="tab-tasks" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Создать управленческую задачу</h3>
+                <form id="taskForm" onsubmit="createTask(event)" style="margin-top: 16px;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Объект:</label>
+                            <select id="taskLocSelect" class="custom-select"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ответственный:</label>
+                            <input type="text" id="taskAssignee" class="custom-input" placeholder="например, Управляющий Иванов" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Срок решения:</label>
+                            <input type="date" id="taskDeadline" class="custom-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label>Описание проблемы и требуемое действие:</label>
+                        <input type="text" id="taskDesc" class="custom-input" placeholder="например, Превышение ФОТ на 4%. Провести аутстаффинг смен." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Поставить задачу</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Активные задачи и поручения</h3>
+                <div class="task-list" id="taskListContainer" style="margin-top: 16px;">
+                    <!-- JS Populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 10: DATA MANAGEMENT -->
+        <div id="tab-dataMgmt" class="tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Управление локальными данными (localStorage)</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                    Система работает автономно. Вы можете сохранить копию рабочих данных в JSON-файл или загрузить ранее сохраненную конфигурацию.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="exportDataJSON()">Экспорт данных (JSON)</button>
+                    <button class="btn" onclick="document.getElementById('importFileInput').click()">Импорт данных (JSON)</button>
+                    <input type="file" id="importFileInput" style="display: none;" accept=".json" onchange="importDataJSON(event)">
+                    <button class="btn btn-danger" onclick="confirmResetWorkingData()">Сбросить рабочие данные</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Безопасность данных</h3>
+                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    ⚠️ <strong>Внимание:</strong> Все рабочие данные сохраняются только в текущем браузере пользователя (localStorage).
+                    Очистка кэша браузера или использование приватного режима может привести к потере не экспортированных данных.
+                    Регулярно совершайте экспорт в JSON.
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Form for Location -->
+    <div id="locationModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="locModalTitle">Новый объект розницы</h3>
+                <button style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;" onclick="closeLocationModal()">✕</button>
+            </div>
+            <form onsubmit="saveLocation(event)">
+                <input type="hidden" id="modalLocId">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Название объекта:</label>
+                    <input type="text" id="modalLocName" class="custom-input" required placeholder="например, Пироговая на Невском">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Формат:</label>
+                    <select id="modalLocFormat" class="custom-select">
+                        <option value="PIE">Пироговая</option>
+                        <option value="CANTEEN">Столовая</option>
+                    </select>
+                </div>
+                <div style="display:flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn" onclick="closeLocationModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        /* --- STATE MANAGEMENT & DEMO DATA SET --- */
+        const DEMO_DATA = {
+            locations: [
+                { id: 'loc-1', name: 'Пироговая на Арбате', format: 'PIE', archived: false },
+                { id: 'loc-2', name: 'Пироговая у Метро', format: 'PIE', archived: false },
+                { id: 'loc-3', name: 'Столовая в БЦ Север', format: 'CANTEEN', archived: false },
+                { id: 'loc-4', name: 'Столовая №1 Завод', format: 'CANTEEN', archived: false },
+                { id: 'loc-5', name: 'Пироговая Садовая', format: 'PIE', archived: false }
+            ],
+            // Monthly metrics mapped by: "locId_month"
+            monthly: {
+                'loc-1_10': { revPlan: 1800000, revFact: 1920000, profPlan: 360000, profFact: 410000, fotPlan: 22, fotFact: 390000, checks: 4200, writeoffs: 35000, margin: 68, audit: 94 },
+                'loc-2_10': { revPlan: 1500000, revFact: 1380000, profPlan: 300000, profFact: 240000, fotPlan: 23, fotFact: 360000, checks: 3100, writeoffs: 48000, margin: 62, audit: 82 },
+                'loc-3_10': { revPlan: 2200000, revFact: 2250000, profPlan: 440000, profFact: 460000, fotPlan: 20, fotFact: 430000, checks: 7500, writeoffs: 28000, margin: 64, audit: 91 },
+                'loc-4_10': { revPlan: 2800000, revFact: 2600000, profPlan: 560000, profFact: 480000, fotPlan: 19, fotFact: 540000, checks: 9800, writeoffs: 62000, margin: 59, audit: 78 },
+                'loc-5_10': { revPlan: 1200000, revFact: 1210000, profPlan: 240000, profFact: 255000, fotPlan: 24, fotFact: 270000, checks: 2800, writeoffs: 19000, margin: 67, audit: 96 }
+            },
+            wholesale: { revPlan: 2500000, revFact: 2380000, profFact: 620000, newClients: 4 },
+            config: { bonusBase: 100000, w1: 30, w2: 25, w3: 20, w4: 15, w5: 10, serviceTarget: 90, serviceCritical: 75 },
+            tasks: [
+                { id: 't-1', locId: 'loc-2', desc: 'Высокие списания тестовых заготовок. Провести ревизию.', assignee: 'Маркова Е.', deadline: '2026-10-25', done: false },
+                { id: 't-2', locId: 'loc-4', desc: 'Превышение норматива ФОТ на 1.8%. Оптимизировать график.', assignee: 'Петров С.', deadline: '2026-10-28', done: false }
+            ]
+        };
+
+        let currentMode = 'demo'; // 'demo' or 'work'
+        let appState = JSON.parse(JSON.stringify(DEMO_DATA));
+        let sortRankingField = 'revPercent';
+        let sortRankingAsc = false;
+
+        /* --- INITIALIZATION --- */
+        window.onload = function() {
+            loadWorkingState();
+            applyFilters();
+        };
+
+        function setOperatingMode(mode) {
+            currentMode = mode;
+            document.getElementById('btnModeDemo').classList.toggle('active', mode === 'demo');
+            document.getElementById('btnModeWork').classList.toggle('active', mode === 'work');
+            document.getElementById('demoBanner').style.display = (mode === 'demo') ? 'flex' : 'none';
+
+            if (mode === 'demo') {
+                appState = JSON.parse(JSON.stringify(DEMO_DATA));
+            } else {
+                loadWorkingState();
+            }
+            populateLocationDropdowns();
+            applyFilters();
+        }
+
+        function loadWorkingState() {
+            const saved = localStorage.getItem('retail_pulse_work_data');
+            if (saved && currentMode === 'work') {
+                try {
+                    appState = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Corrupted local storage data", e);
+                }
+            } else if (currentMode === 'work') {
+                // Initialize empty working state if none exists
+                appState = { locations: [], monthly: {}, wholesale: { revPlan:0, revFact:0, profFact:0, newClients:0 }, config: DEMO_DATA.config, tasks: [] };
+            }
+        }
+
+        function saveWorkingState() {
+            if (currentMode === 'work') {
+                localStorage.setItem('retail_pulse_work_data', JSON.stringify(appState));
+            }
+        }
+
+        /* --- UI TAB NAVIGATION --- */
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            if (tabId === 'ranking') renderRankingTable();
+            if (tabId === 'diagnostics') renderDiagnostics();
+            if (tabId === 'standards') renderStandards();
+            if (tabId === 'bonusCalc') calculateBonus();
+            if (tabId === 'tasks') renderTasks();
+            if (tabId === 'dataInput') { renderLocationTable(); loadMonthlyInputForm(); }
+            if (tabId === 'analytics') renderAnalytics();
+        }
+
+        /* --- FILTERING & DASHBOARD COMPUTATION --- */
+        function populateLocationDropdowns() {
+            const selectFilter = document.getElementById('filterLocation');
+            const selectInput = document.getElementById('inputLocSelect');
+            const selectTask = document.getElementById('taskLocSelect');
+
+            const currentFilterVal = selectFilter.value;
+            selectFilter.innerHTML = '<option value="ALL">Все объекты</option>';
+            selectInput.innerHTML = '';
+            selectTask.innerHTML = '';
+
+            appState.locations.filter(l => !l.archived).forEach(loc => {
+                selectFilter.innerHTML += `<option value="${loc.id}">${loc.name}</option>`;
+                selectInput.innerHTML += `<option value="${loc.id}">${loc.name}</option>`;
+                selectTask.innerHTML += `<option value="${loc.id}">${loc.name}</option>`;
+            });
+
+            if (currentFilterVal) selectFilter.value = currentFilterVal;
+        }
+
+        function getFilteredMetrics() {
+            const month = document.getElementById('filterMonth').value;
+            const format = document.getElementById('filterFormat').value;
+            const locId = document.getElementById('filterLocation').value;
+
+            let validLocations = appState.locations.filter(l => !l.archived);
+            if (format !== 'ALL') validLocations = validLocations.filter(l => l.format === format);
+            if (locId !== 'ALL') validLocations = validLocations.filter(l => l.id === locId);
+
+            let totals = {
+                revPlan: 0, revFact: 0, profPlan: 0, profFact: 0,
+                checks: 0, writeoffs: 0,
+                effectiveCount: 0, totalCount: validLocations.length,
+                sumAudit: 0, auditCount: 0
+            };
+
+            validLocations.forEach(loc => {
+                const key = `${loc.id}_${month}`;
+                const m = appState.monthly[key];
+                if (m) {
+                    totals.revPlan += m.revPlan || 0;
+                    totals.revFact += m.revFact || 0;
+                    totals.profPlan += m.profPlan || 0;
+                    totals.profFact += m.profFact || 0;
+                    totals.checks += m.checks || 0;
+                    totals.writeoffs += m.writeoffs || 0;
+
+                    if (m.audit) { totals.sumAudit += m.audit; totals.auditCount++; }
+
+                    // Location Effectiveness logic: >= 95% revenue AND >= 95% profit targets
+                    const revPerf = m.revPlan > 0 ? (m.revFact / m.revPlan) : 0;
+                    const profPerf = m.profPlan > 0 ? (m.profFact / m.profPlan) : 0;
+                    if (revPerf >= 0.95 && profPerf >= 0.95) totals.effectiveCount++;
+                }
+            });
+
+            return totals;
+        }
+
+        function applyFilters() {
+            populateLocationDropdowns();
+            const metrics = getFilteredMetrics();
+            const formatCurr = (v) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(v);
+
+            // KPI 1: Retail Profit
+            const profPct = metrics.profPlan > 0 ? Math.round((metrics.profFact / metrics.profPlan) * 100) : 0;
+            document.getElementById('kpi1-fact').innerText = formatCurr(metrics.profFact);
+            document.getElementById('kpi1-target').innerText = `из ${formatCurr(metrics.profPlan)}`;
+            document.getElementById('kpi1-percent').innerText = `${profPct}%`;
+            document.getElementById('kpi1-progress').style.width = `${Math.min(profPct, 100)}%`;
+            document.getElementById('kpi1-var').innerText = formatCurr(metrics.profFact - metrics.profPlan);
+
+            // KPI 2: Retail Revenue
+            const revPct = metrics.revPlan > 0 ? Math.round((metrics.revFact / metrics.revPlan) * 100) : 0;
+            document.getElementById('kpi2-fact').innerText = formatCurr(metrics.revFact);
+            document.getElementById('kpi2-target').innerText = `из ${formatCurr(metrics.revPlan)}`;
+            document.getElementById('kpi2-percent').innerText = `${revPct}%`;
+            document.getElementById('kpi2-progress').style.width = `${Math.min(revPct, 100)}%`;
+            document.getElementById('kpi2-var').innerText = formatCurr(metrics.revFact - metrics.revPlan);
+
+            // KPI 3: Location Effectiveness
+            const effPct = metrics.totalCount > 0 ? Math.round((metrics.effectiveCount / metrics.totalCount) * 100) : 0;
+            document.getElementById('kpi3-fact').innerText = `${metrics.effectiveCount} / ${metrics.totalCount}`;
+            document.getElementById('kpi3-percent').innerText = `${effPct}%`;
+            document.getElementById('kpi3-progress').style.width = `${effPct}%`;
+
+            // KPI 4: Quality & Service
+            const avgAudit = metrics.auditCount > 0 ? Math.round(metrics.sumAudit / metrics.auditCount) : 0;
+            document.getElementById('kpi4-fact').innerText = `${avgAudit}%`;
+            document.getElementById('kpi4-progress').style.width = `${avgAudit}%`;
+
+            // KPI 5: Wholesale
+            const ws = appState.wholesale;
+            const wsPct = ws.revPlan > 0 ? Math.round((ws.revFact / ws.revPlan) * 100) : 0;
+            document.getElementById('kpi5-fact').innerText = formatCurr(ws.revFact);
+            document.getElementById('kpi5-target').innerText = `из ${formatCurr(ws.revPlan)}`;
+            document.getElementById('kpi5-percent').innerText = `${wsPct}%`;
+            document.getElementById('kpi5-progress').style.width = `${Math.min(wsPct, 100)}%`;
+            document.getElementById('kpi5-clients').innerText = `+${ws.newClients} нов. клиентов`;
+
+            renderDashboardChart(metrics);
+            renderDashboardSummary(metrics);
+        }
+
+        /* --- SVG CHARTS GENERATOR --- */
+        function renderDashboardChart(metrics) {
+            const svg = document.getElementById('dashChart');
+            const revFact = metrics.revFact;
+            const revPlan = metrics.revPlan;
+            const profFact = metrics.profFact;
+            const profPlan = metrics.profPlan;
+
+            const maxVal = Math.max(revFact, revPlan, 1);
+            const scale = (val) => 160 - (val / maxVal) * 140;
+
+            svg.innerHTML = `
+                <!-- Grid Lines -->
+                <line x1="50" y1="20" x2="550" y2="20" stroke="#334155" stroke-dasharray="4"/>
+                <line x1="50" y1="90" x2="550" y2="90" stroke="#334155" stroke-dasharray="4"/>
+                <line x1="50" y1="160" x2="550" y2="160" stroke="#334155"/>
+
+                <!-- Bars for Revenue -->
+                <rect x="120" y="${scale(revPlan)}" width="50" height="${160 - scale(revPlan)}" fill="rgba(37, 99, 235, 0.4)" rx="4"/>
+                <rect x="180" y="${scale(revFact)}" width="50" height="${160 - scale(revFact)}" fill="#2563eb" rx="4"/>
+
+                <!-- Bars for Profit -->
+                <rect x="360" y="${scale(profPlan)}" width="50" height="${160 - scale(profPlan)}" fill="rgba(13, 148, 136, 0.4)" rx="4"/>
+                <rect x="420" y="${scale(profFact)}" width="50" height="${160 - scale(profFact)}" fill="#0d9488" rx="4"/>
+
+                <!-- Labels -->
+                <text x="175" y="185" fill="#94a3b8" font-size="12" text-anchor="middle">Выручка (План / Факт)</text>
+                <text x="415" y="185" fill="#94a3b8" font-size="12" text-anchor="middle">Прибыль (План / Факт)</text>
+            `;
+        }
+
+        function renderDashboardSummary(metrics) {
+            const container = document.getElementById('dashSummaryList');
+            const formatCurr = (v) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(v);
+            const avgCheck = metrics.checks > 0 ? formatCurr(metrics.revFact / metrics.checks) : 'Нет данных';
+
+            container.innerHTML = `
+                <div class="diag-card">
+                    <strong style="color:#fff;">Средний чек по сети:</strong> ${avgCheck}
+                </div>
+                <div class="diag-card ${metrics.writeoffs > 100000 ? 'warning' : ''}">
+                    <strong style="color:#fff;">Общие списания:</strong> ${formatCurr(metrics.writeoffs)}
+                </div>
+                <div class="diag-card">
+                    <strong style="color:#fff;">Всего чеков (трафик):</strong> ${metrics.checks.toLocaleString('ru-RU')} шт.
+                </div>
+            `;
+        }
+
+        /* --- DATA INPUT & MANAGEMENT --- */
+        function renderLocationTable() {
+            const tbody = document.getElementById('locationListTable');
+            tbody.innerHTML = '';
+            appState.locations.forEach(loc => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${loc.name}</strong></td>
+                        <td>${loc.format === 'PIE' ? 'Пироговая' : 'Столовая'}</td>
+                        <td>${loc.archived ? '<span class="badge badge-danger">В архиве</span>' : '<span class="badge badge-success">Активен</span>'}</td>
+                        <td>
+                            <button class="btn" style="padding:4px 8px; font-size:11px;" onclick="openLocationModal('${loc.id}')">Изменить</button>
+                            <button class="btn btn-danger" style="padding:4px 8px; font-size:11px;" onclick="toggleArchiveLoc('${loc.id}')">
+                                ${loc.archived ? 'Восстановить' : 'В архив'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function loadMonthlyInputForm() {
+            const locId = document.getElementById('inputLocSelect').value;
+            const month = document.getElementById('inputMonthSelect').value;
+            if (!locId) return;
+
+            const key = `${locId}_${month}`;
+            const data = appState.monthly[key] || {};
+
+            document.getElementById('inpRevPlan').value = data.revPlan || '';
+            document.getElementById('inpRevFact').value = data.revFact || '';
+            document.getElementById('inpProfPlan').value = data.profPlan || '';
+            document.getElementById('inpProfFact').value = data.profFact || '';
+            document.getElementById('inpFotPlan').value = data.fotPlan || '';
+            document.getElementById('inpFotFact').value = data.fotFact || '';
+            document.getElementById('inpChecks').value = data.checks || '';
+            document.getElementById('inpWriteoffs').value = data.writeoffs || '';
+            document.getElementById('inpMargin').value = data.margin || '';
+            document.getElementById('inpAuditScore').value = data.audit || '';
+        }
+
+        function saveMonthlyData(e) {
+            e.preventDefault();
+            const locId = document.getElementById('inputLocSelect').value;
+            const month = document.getElementById('inputMonthSelect').value;
+            if (!locId) return;
+
+            const key = `${locId}_${month}`;
+            appState.monthly[key] = {
+                revPlan: parseFloat(document.getElementById('inpRevPlan').value) || 0,
+                revFact: parseFloat(document.getElementById('inpRevFact').value) || 0,
+                profPlan: parseFloat(document.getElementById('inpProfPlan').value) || 0,
+                profFact: parseFloat(document.getElementById('inpProfFact').value) || 0,
+                fotPlan: parseFloat(document.getElementById('inpFotPlan').value) || 0,
+                fotFact: parseFloat(document.getElementById('inpFotFact').value) || 0,
+                checks: parseInt(document.getElementById('inpChecks').value) || 0,
+                writeoffs: parseFloat(document.getElementById('inpWriteoffs').value) || 0,
+                margin: parseFloat(document.getElementById('inpMargin').value) || 0,
+                audit: parseFloat(document.getElementById('inpAuditScore').value) || 0
+            };
+
+            saveWorkingState();
+            alert('Показатели успешно сохранены!');
+            applyFilters();
+        }
+
+        function openLocationModal(locId = null) {
+            document.getElementById('locationModal').classList.add('active');
+            if (locId) {
+                const loc = appState.locations.find(l => l.id === locId);
+                document.getElementById('locModalTitle').innerText = 'Редактировать объект';
+                document.getElementById('modalLocId').value = loc.id;
+                document.getElementById('modalLocName').value = loc.name;
+                document.getElementById('modalLocFormat').value = loc.format;
+            } else {
+                document.getElementById('locModalTitle').innerText = 'Новый объект розницы';
+                document.getElementById('modalLocId').value = '';
+                document.getElementById('modalLocName').value = '';
+                document.getElementById('modalLocFormat').value = 'PIE';
+            }
+        }
+
+        function closeLocationModal() {
+            document.getElementById('locationModal').classList.remove('active');
+        }
+
+        function saveLocation(e) {
+            e.preventDefault();
+            const id = document.getElementById('modalLocId').value;
+            const name = document.getElementById('modalLocName').value;
+            const format = document.getElementById('modalLocFormat').value;
+
+            if (id) {
+                const loc = appState.locations.find(l => l.id === id);
+                if (loc) { loc.name = name; loc.format = format; }
+            } else {
+                appState.locations.push({
+                    id: 'loc-' + Date.now(),
+                    name: name,
+                    format: format,
+                    archived: false
+                });
+            }
+
+            saveWorkingState();
+            closeLocationModal();
+            renderLocationTable();
+            populateLocationDropdowns();
+        }
+
+        function toggleArchiveLoc(id) {
+            const loc = appState.locations.find(l => l.id === id);
+            if (loc) {
+                loc.archived = !loc.archived;
+                saveWorkingState();
+                renderLocationTable();
+                populateLocationDropdowns();
+            }
+        }
+
+        /* --- FINANCIAL ANALYTICS --- */
+        function renderAnalytics() {
+            const month = document.getElementById('filterMonth').value;
+            const formatCurr = (v) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(v);
+
+            let pies = { revPlan: 0, revFact: 0, profPlan: 0, profFact: 0 };
+            let canteens = { revPlan: 0, revFact: 0, profPlan: 0, profFact: 0 };
+
+            appState.locations.filter(l => !l.archived).forEach(loc => {
+                const m = appState.monthly[`${loc.id}_${month}`];
+                if (m) {
+                    const target = (loc.format === 'PIE') ? pies : canteens;
+                    target.revPlan += m.revPlan || 0;
+                    target.revFact += m.revFact || 0;
+                    target.profPlan += m.profPlan || 0;
+                    target.profFact += m.profFact || 0;
+                }
+            });
+
+            document.getElementById('finPiesRev').innerText = formatCurr(pies.revFact);
+            document.getElementById('finPiesRevVar').innerText = `План: ${formatCurr(pies.revPlan)} (${pies.revPlan > 0 ? Math.round(pies.revFact/pies.revPlan*100) : 0}%)`;
+
+            document.getElementById('finCanteensRev').innerText = formatCurr(canteens.revFact);
+            document.getElementById('finCanteensRevVar').innerText = `План: ${formatCurr(canteens.revPlan)} (${canteens.revPlan > 0 ? Math.round(canteens.revFact/canteens.revPlan*100) : 0}%)`;
+
+            const totalProf = pies.profFact + canteens.profFact;
+            const totalRev = pies.revFact + canteens.revFact;
+            document.getElementById('finTotalProf').innerText = formatCurr(totalProf);
+            document.getElementById('finTotalProfVar').innerText = `Маржа сети: ${totalRev > 0 ? (totalProf/totalRev*100).toFixed(1) : 0}%`;
+
+            // Render Table
+            const tbody = document.getElementById('finSummaryTable');
+            tbody.innerHTML = `
+                <tr>
+                    <td><strong>Пироговые</strong></td>
+                    <td>${formatCurr(pies.revPlan)}</td>
+                    <td>${formatCurr(pies.revFact)}</td>
+                    <td style="color:${pies.revFact >= pies.revPlan ? 'var(--status-success)' : 'var(--status-danger)'}">${formatCurr(pies.revFact - pies.revPlan)}</td>
+                    <td>${formatCurr(pies.profPlan)}</td>
+                    <td>${formatCurr(pies.profFact)}</td>
+                    <td style="color:${pies.profFact >= pies.profPlan ? 'var(--status-success)' : 'var(--status-danger)'}">${formatCurr(pies.profFact - pies.profPlan)}</td>
+                </tr>
+                <tr>
+                    <td><strong>Столовые</strong></td>
+                    <td>${formatCurr(canteens.revPlan)}</td>
+                    <td>${formatCurr(canteens.revFact)}</td>
+                    <td style="color:${canteens.revFact >= canteens.revPlan ? 'var(--status-success)' : 'var(--status-danger)'}">${formatCurr(canteens.revFact - canteens.revPlan)}</td>
+                    <td>${formatCurr(canteens.profPlan)}</td>
+                    <td>${formatCurr(canteens.profFact)}</td>
+                    <td style="color:${canteens.profFact >= canteens.profPlan ? 'var(--status-success)' : 'var(--status-danger)'}">${formatCurr(canteens.profFact - canteens.profPlan)}</td>
+                </tr>
+            `;
+
+            // SVG Comparison Chart
+            const svg = document.getElementById('finComparisonChart');
+            const maxVal = Math.max(pies.revFact, canteens.revFact, 1);
+            const scale = (val) => 180 - (val / maxVal) * 140;
+
+            svg.innerHTML = `
+                <line x1="50" y1="180" x2="550" y2="180" stroke="#334155"/>
+                <!-- Pies -->
+                <rect x="120" y="${scale(pies.revPlan)}" width="60" height="${180 - scale(pies.revPlan)}" fill="rgba(37, 99, 235, 0.4)" rx="4"/>
+                <rect x="190" y="${scale(pies.revFact)}" width="60" height="${180 - scale(pies.revFact)}" fill="#2563eb" rx="4"/>
+                <text x="185" y="205" fill="#94a3b8" font-size="12" text-anchor="middle">Пироговые</text>
+
+                <!-- Canteens -->
+                <rect x="350" y="${scale(canteens.revPlan)}" width="60" height="${180 - scale(canteens.revPlan)}" fill="rgba(13, 148, 136, 0.4)" rx="4"/>
+                <rect x="420" y="${scale(canteens.revFact)}" width="60" height="${180 - scale(canteens.revFact)}" fill="#0d9488" rx="4"/>
+                <text x="415" y="205" fill="#94a3b8" font-size="12" text-anchor="middle">Столовые</text>
+            `;
+        }
+
+        /* --- RANKING TABLE --- */
+        function sortRankingTable(field) {
+            if (sortRankingField === field) {
+                sortRankingAsc = !sortRankingAsc;
+            } else {
+                sortRankingField = field;
+                sortRankingAsc = false;
+            }
+            renderRankingTable();
+        }
+
+        function renderRankingTable() {
+            const month = document.getElementById('filterMonth').value;
+            const tbody = document.getElementById('rankingTableBody');
+            const formatCurr = (v) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(v);
+
+            let rows = appState.locations.filter(l => !l.archived).map(loc => {
+                const m = appState.monthly[`${loc.id}_${month}`] || {};
+                const revPercent = m.revPlan > 0 ? (m.revFact / m.revPlan) * 100 : 0;
+                const profPercent = m.profPlan > 0 ? (m.profFact / m.profPlan) * 100 : 0;
+                // Zero check for checks count
+                const avgCheck = (m.checks && m.checks > 0 && m.revFact) ? (m.revFact / m.checks) : null;
+                const fotPercent = (m.revFact && m.revFact > 0 && m.fotFact) ? (m.fotFact / m.revFact) * 100 : null;
+                const isEffective = revPercent >= 95 && profPercent >= 95;
+
+                return {
+                    name: loc.name,
+                    format: loc.format === 'PIE' ? 'Пироговая' : 'Столовая',
+                    revPercent,
+                    profPercent,
+                    avgCheck,
+                    fotPercent,
+                    status: isEffective ? 'Результативен' : 'Требует внимания',
+                    raw: m
+                };
+            });
+
+            rows.sort((a, b) => {
+                let valA = a[sortRankingField] ?? -999;
+                let valB = b[sortRankingField] ?? -999;
+                if (valA < valB) return sortRankingAsc ? -1 : 1;
+                if (valA > valB) return sortRankingAsc ? 1 : -1;
+                return 0;
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(r => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${r.name}</strong></td>
+                        <td>${r.format}</td>
+                        <td style="color:${r.revPercent >= 95 ? 'var(--status-success)' : 'var(--status-danger)'}">${r.revPercent > 0 ? r.revPercent.toFixed(1) + '%' : 'Нет данных'}</td>
+                        <td style="color:${r.profPercent >= 95 ? 'var(--status-success)' : 'var(--status-danger)'}">${r.profPercent > 0 ? r.profPercent.toFixed(1) + '%' : 'Нет данных'}</td>
+                        <td>${r.avgCheck !== null ? formatCurr(r.avgCheck) : 'Нет данных'}</td>
+                        <td>${r.fotPercent !== null ? r.fotPercent.toFixed(1) + '%' : 'Нет данных'}</td>
+                        <td><span class="badge ${r.status === 'Результативен' ? 'badge-success' : 'badge-danger'}">${r.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* --- DIAGNOSTICS MODULE --- */
+        function renderDiagnostics() {
+            const month = document.getElementById('filterMonth').value;
+            const container = document.getElementById('diagnosticsContainer');
+            container.innerHTML = '';
+
+            appState.locations.filter(l => !l.archived).forEach(loc => {
+                const m = appState.monthly[`${loc.id}_${month}`];
+                if (!m) return;
+
+                let issues = [];
+
+                // Payroll Check
+                const actualFotPct = m.revFact > 0 ? (m.fotFact / m.revFact) * 100 : 0;
+                if (m.fotPlan && actualFotPct > m.fotPlan) {
+                    issues.push(`Превышение ФОТ: факт <strong>${actualFotPct.toFixed(1)}%</strong> при нормативе <strong>${m.fotPlan}%</strong>. Возможные направления проверки: переработки, лишние смены в графике, сниженная выручка.`);
+                }
+
+                // Waste/Write-offs Check (>3% of revenue)
+                const writeoffPct = m.revFact > 0 ? (m.writeoffs / m.revFact) * 100 : 0;
+                if (writeoffPct > 3) {
+                    issues.push(`Высокий уровень списаний: <strong>${writeoffPct.toFixed(1)}%</strong> от выручки (${m.writeoffs.toLocaleString()} ₽). Проверить: соблюдение сроков годности, точность прогноза выпечки, правила хранения.`);
+                }
+
+                // Audit Score
+                if (m.audit && m.audit < 85) {
+                    issues.push(`Низкая оценка сервиса/качества: <strong>${m.audit}%</strong>. Рекомендуется повторный аудит санитарии и стандартов работы линейного персонала.`);
+                }
+
+                if (issues.length > 0) {
+                    container.innerHTML += `
+                        <div class="diag-card warning">
+                            <h4 style="color:#fff; margin-bottom:8px;">${loc.name} (${loc.format === 'PIE' ? 'Пироговая' : 'Столовая'})</h4>
+                            <ul style="padding-left: 20px; font-size: 13px; color: var(--text-secondary);">
+                                ${issues.map(i => `<li style="margin-bottom:6px;">${i}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            });
+
+            if (container.innerHTML === '') {
+                container.innerHTML = '<div class="card" style="text-align:center; color:var(--text-secondary);">Все ключевые показатели объектов находятся в пределах допустимых норм.</div>';
+            }
+        }
+
+        /* --- STANDARDS & SERVICE --- */
+        function renderStandards() {
+            const month = document.getElementById('filterMonth').value;
+            const tbody = document.getElementById('standardsTableBody');
+            tbody.innerHTML = '';
+
+            appState.locations.filter(l => !l.archived).forEach(loc => {
+                const m = appState.monthly[`${loc.id}_${month}`] || {};
+                const score = m.audit ?? 'Нет данных';
+                let badgeClass = 'badge-info';
+                if (typeof score === 'number') {
+                    if (score >= 90) badgeClass = 'badge-success';
+                    else if (score >= 75) badgeClass = 'badge-warning';
+                    else badgeClass = 'badge-danger';
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${loc.name}</strong></td>
+                        <td>${typeof score === 'number' ? score + '%' : score}</td>
+                        <td><span class="badge ${badgeClass}">${typeof score === 'number' ? (score >= 90 ? 'Соответствует' : 'Замечания') : '—'}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* --- WHOLESALE DATA --- */
+        function saveWholesaleData() {
+            appState.wholesale = {
+                revPlan: parseFloat(document.getElementById('wsRevPlan').value) || 0,
+                revFact: parseFloat(document.getElementById('wsRevFact').value) || 0,
+                profFact: parseFloat(document.getElementById('wsProfFact').value) || 0,
+                newClients: parseInt(document.getElementById('wsNewClients').value) || 0
+            };
+            saveWorkingState();
+            alert('Оптовые показатели обновлены!');
+            applyFilters();
+        }
+
+        /* --- BONUS CALCULATOR --- */
+        function calculateBonus() {
+            const cfg = appState.config;
+            const base = parseFloat(document.getElementById('bonusBase').value) || cfg.bonusBase;
+            const w1 = parseFloat(document.getElementById('w1').value) || 0;
+            const w2 = parseFloat(document.getElementById('w2').value) || 0;
+            const w3 = parseFloat(document.getElementById('w3').value) || 0;
+            const w4 = parseFloat(document.getElementById('w4').value) || 0;
+            const w5 = parseFloat(document.getElementById('w5').value) || 0;
+
+            const totalWeight = w1 + w2 + w3 + w4 + w5;
+            const resContainer = document.getElementById('bonusCalcResult');
+
+            if (totalWeight !== 100) {
+                resContainer.innerHTML = `<div style="color:var(--status-danger);">Ошибка: Сумма весов KPI должна быть равна 100% (текущая: ${totalWeight}%).</div>`;
+                return;
+            }
+
+            // Calculations based on filtered metrics
+            const metrics = getFilteredMetrics();
+            const k1Exec = metrics.profPlan > 0 ? Math.min(metrics.profFact / metrics.profPlan, 1.2) : 0;
+            const k2Exec = metrics.revPlan > 0 ? Math.min(metrics.revFact / metrics.revPlan, 1.2) : 0;
+            const k3Exec = metrics.totalCount > 0 ? (metrics.effectiveCount / metrics.totalCount) : 0;
+            const k4Exec = metrics.auditCount > 0 ? Math.min((metrics.sumAudit / metrics.auditCount) / 100, 1) : 0;
+            const k5Exec = appState.wholesale.revPlan > 0 ? Math.min(appState.wholesale.revFact / appState.wholesale.revPlan, 1.2) : 0;
+
+            const overallBonusFactor = (k1Exec * (w1/100)) + (k2Exec * (w2/100)) + (k3Exec * (w3/100)) + (k4Exec * (w4/100)) + (k5Exec * (w5/100));
+            const totalBonus = Math.round(base * overallBonusFactor);
+
+            const formatCurr = (v) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(v);
+
+            resContainer.innerHTML = `
+                <div style="font-size:24px; font-weight:800; color:var(--accent-teal-light); margin-bottom:12px;">
+                    Расчётная премия: ${formatCurr(totalBonus)}
+                </div>
+                <div style="font-size:12px; color:var(--text-secondary); line-height:1.6;">
+                    <strong>Детализация коэффициентов:</strong><br>
+                    • Прибыль розницы (${w1}%): ${(k1Exec*100).toFixed(1)}% выполнения<br>
+                    • Выручка розницы (${w2}%): ${(k2Exec*100).toFixed(1)}% выполнения<br>
+                    • Результативность объектов (${w3}%): ${(k3Exec*100).toFixed(1)}% выполнения<br>
+                    • Стандарты сервиса (${w4}%): ${(k4Exec*100).toFixed(1)}% выполнения<br>
+                    • Оптовое направление (${w5}%): ${(k5Exec*100).toFixed(1)}% выполнения
+                </div>
+            `;
+        }
+
+        /* --- TASKS MANAGEMENT --- */
+        function renderTasks() {
+            const container = document.getElementById('taskListContainer');
+            container.innerHTML = '';
+
+            appState.tasks.forEach(t => {
+                const loc = appState.locations.find(l => l.id === t.locId);
+                const locName = loc ? loc.name : 'Все объекты';
+
+                container.innerHTML += `
+                    <div class="task-item">
+                        <div>
+                            <div style="font-size:11px; color:var(--accent-teal); font-weight:700;">${locName} • Срок: ${t.deadline}</div>
+                            <div style="font-size:13px; margin:4px 0;">${t.desc}</div>
+                            <div style="font-size:11px; color:var(--text-muted);">Ответственный: ${t.assignee}</div>
+                        </div>
+                        <button class="btn ${t.done ? 'btn-primary' : ''}" style="padding:4px 8px; font-size:11px;" onclick="toggleTaskStatus('${t.id}')">
+                            ${t.done ? 'Выполнено ✓' : 'Завершить'}
+                        </button>
+                    </div>
+                `;
+            });
+
+            if (appState.tasks.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-secondary); font-size:13px;">Активных задач нет.</div>';
+            }
+        }
+
+        function createTask(e) {
+            e.preventDefault();
+            appState.tasks.push({
+                id: 't-' + Date.now(),
+                locId: document.getElementById('taskLocSelect').value,
+                desc: document.getElementById('taskDesc').value,
+                assignee: document.getElementById('taskAssignee').value,
+                deadline: document.getElementById('taskDeadline').value,
+                done: false
+            });
+
+            saveWorkingState();
+            document.getElementById('taskForm').reset();
+            renderTasks();
+        }
+
+        function toggleTaskStatus(id) {
+            const task = appState.tasks.find(t => t.id === id);
+            if (task) {
+                task.done = !task.done;
+                saveWorkingState();
+                renderTasks();
+            }
+        }
+
+        /* --- EXPORT & IMPORT JSON --- */
+        function exportDataJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `retail_pulse_backup_${new Date().toISOString().slice(0,10)}.json`);
+            dlAnchorElem.click();
+        }
+
+        function importDataJSON(e) {
+            const fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                try {
+                    const importedObj = JSON.parse(event.target.result);
+                    if (importedObj.locations && importedObj.monthly) {
+                        appState = importedObj;
+                        if (currentMode === 'work') saveWorkingState();
+                        alert('Данные успешно импортированы!');
+                        applyFilters();
+                    } else {
+                        alert('Ошибка: Неверный формат файла JSON!');
+                    }
+                } catch (err) {
+                    alert('Ошибка чтения файла!');
+                }
+            };
+            fileReader.readAsText(e.target.files[0]);
+        }
+
+        function confirmResetWorkingData() {
+            if (confirm('Вы уверены, что хотите полностью очистить все рабочие данные? Это действие нельзя отменить.')) {
+                localStorage.removeItem('retail_pulse_work_data');
+                loadWorkingState();
+                applyFilters();
+                alert('Рабочие данные сброшены.');
+            }
+        }
+
+        function saveConfig() {
+            appState.config.serviceTarget = parseFloat(document.getElementById('cfgServiceTarget').value) || 90;
+            appState.config.serviceCritical = parseFloat(document.getElementById('cfgServiceCritical').value) || 75;
+            saveWorkingState();
+        }
+    </script>
+</body>
+</html>
